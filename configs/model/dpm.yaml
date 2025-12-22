@@ -1,0 +1,3 @@
+name: dpm-video
+pretrained: /work/eldar/models/vggt/VGGT-1B.pt
+decoder_depth: 4

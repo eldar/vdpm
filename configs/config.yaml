@@ -1,0 +1,50 @@
+defaults:
+  - _self_
+  - hydra: defaults
+  - model: dpm
+
+config:
+  exp_name: "debug"
+  file: "config.yaml"
+
+data_loader:
+  batch_size: 2
+  num_workers: 8
+  dynamic_batch: false
+
+train:
+  logging: true
+  num_gpus: 4
+  amp: bfloat16
+  amp_dpt: false
+  dry_run: false
+  camera_loss_lambda: 5.0
+
+optimiser:
+  lr: 0.00005 # absolute lr
+  blr: 1.5e-4 # base learning rate: absolute_lr = base_lr * total_batch_size / 256
+  start_epoch:
+  epochs: 70
+  accum_iter: 1
+  warmup_epochs: 3
+  min_lr: 1e-06
+
+run:
+  resume: false
+  dirpath: null
+  debug: false
+  random_seed: 42
+  git_hash: null
+  log_frequency: 250
+  training_progress_bar: false
+  save_freq: 5
+  eval_freq: 1
+  keep_freq: 5
+  print_freq: 20
+  num_keep_ckpts: 5
+  # Old Dust3r params
+  world_size: -1
+  local_rank: -1
+  dist_url: "env://"
+  seed: 0
+

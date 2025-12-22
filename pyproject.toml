@@ -1,0 +1,33 @@
+[project]
+name = "dynamic3d"
+version = "0.9"
+
+[tool.basedpyright]
+"exclude" = [
+    ".git",
+    ".venv*",
+    "**/__pycache__",
+    "experiments_out",
+    "exp",
+    "data"
+]
+typeCheckingMode = "basic"
+reportDuplicateImport = "none"
+reportUnusedImport = "none"
+reportPossiblyUnboundVariable = "none"
+reportUndefinedVariable = "none"
+reportUnusedVariable = "none"
+extraPaths = ["dust3r"]
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".venv*",
+    "**/__pycache__",
+    "experiments_out",
+    "exp",
+    "data"
+]
+ignore = [
+    "F722",  # Forward annotation false positive from jaxtyping. Should be caught by pyright.
+]
