@@ -134,8 +134,8 @@ class TrackVisualiser:
         start_idx = max(1, f_idx - self._trail_length + 1)
         for node in self._segment_nodes:
             node.visible = False
-        for idx in range(start_idx, f_idx + 1):
-            self._segment_nodes[idx].visible = True
+        if f_idx > 0:
+            self._segment_nodes[f_idx - 1].visible = True
 
 
 class ViserViewer:
@@ -150,10 +150,9 @@ class ViserViewer:
 
         self.server = viser.ViserServer(port=self.port)
         self._setup_gui()
-        # self._setup_event_handlers()
+        self._setup_event_handlers()
 
-        # self._track_visualiser = TrackVisualiser(self.server)
-        self._track_visualiser = None
+        self._track_visualiser = TrackVisualiser(self.server)
 
     def _setup_gui(self):
         server = self.server
