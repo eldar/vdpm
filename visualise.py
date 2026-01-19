@@ -135,7 +135,7 @@ class TrackVisualiser:
         for node in self._segment_nodes:
             node.visible = False
         for idx in range(start_idx, f_idx + 1):
-            self._segment_nodes[idx].visible = True
+            self._segment_nodes[idx-1].visible = True
 
 
 class ViserViewer:
@@ -147,18 +147,20 @@ class ViserViewer:
         self.S = 5 # num_frames
         self.need_update = True
         self.need_sequence_change = False
+        self.is_playing = False
+        self.last_update_time = time.time()
 
         self.server = viser.ViserServer(port=self.port)
         self._setup_gui()
-        # self._setup_event_handlers()
+        self._setup_event_handlers()
 
-        # self._track_visualiser = TrackVisualiser(self.server)
-        self._track_visualiser = None
+        self._track_visualiser = TrackVisualiser(self.server)
 
     def _setup_gui(self):
         server = self.server
         server.gui.configure_theme(control_layout="floating", control_width="large", show_logo=False)
         self.seq_selector = server.gui.add_button("Next example")
+        self.play_button = server.gui.add_button("Play")
         self.scene_label = server.gui.add_text(
             "Sequence ID",
             initial_value="",
@@ -219,6 +221,11 @@ class ViserViewer:
             self.server.flush()  # Optional!
             self.need_update = True
             self.need_sequence_change = True
+
+        @self.play_button.on_click
+        def _(_) -> None:
+            self.is_playing = not self.is_playing
+            self.play_button.text = "Pause" if self.is_playing else "Play"
 
         @self.gui_point_size.on_update
         def _(_):
@@ -428,6 +435,10 @@ class ViserViewer:
     def run(self):
         """Run the visualization event loop"""
         while True:
+            current_time = time.time()
+            if self.is_playing and current_time - self.last_update_time > 0.1:  # 0.5 seconds per frame
+                self.gui_timestep.value = (self.gui_timestep.value + 1) % self.S
+                self.last_update_time = current_time
             self.update()
             time.sleep(1e-3)
 
